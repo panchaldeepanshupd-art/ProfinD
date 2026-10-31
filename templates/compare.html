@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}Compare Store Prices — ProfinD{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: 35px;">
+    <div class="container">
+        <div class="section-header" style="margin-bottom: 30px;">
+            <h1 class="section-title">Price Comparison Matrix</h1>
+            <p class="section-subtitle">
+                Side-by-side e-commerce store analysis with automated lowest-cost detection
+            </p>
+        </div>
+
+        <!-- Product Selector Dropdown -->
+        <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; max-width: 780px; margin: 0 auto 30px auto; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <label for="productSelector" style="font-weight: 600; font-size: 0.95rem; color: var(--dark); white-space: nowrap;">
+                Select Product to Compare:
+            </label>
+            <select 
+                id="productSelector" 
+                class="search-input" 
+                style="flex: 1; min-width: 260px; border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; background: var(--light-bg); cursor: pointer;"
+                onchange="if(this.value) window.location.href='{{ url_for('compare') }}?product_id=' + this.value;"
+            >
+                {% for prod in all_products %}
+                    <option value="{{ prod.id }}" {% if selected_product and selected_product.id == prod.id %}selected{% endif %}>
+                        {{ prod.name }} ({{ prod.brand }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {% if selected_product %}
+            <!-- Selected Product Quick Summary -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 16px; padding: 26px 30px; margin-bottom: 24px; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                <div>
+                    <span class="product-badge" style="position: static; margin-bottom: 6px; display: inline-block;">{{ selected_product.category }}</span>
+                    <h2 style="font-size: 1.4rem; margin: 4px 0 6px 0;">{{ selected_product.name }}</h2>
+                    <p style="color: var(--muted); font-size: 0.88rem; margin: 0;">{{ selected_product.specifications }}</p>
+                </div>
+
+                <div style="display: flex; gap: 24px; align-items: center;">
+                    <div>
+                        <span style="font-size: 0.8rem; color: var(--muted); display: block;">Lowest Total Offer:</span>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1;">
+                            {{ analysis.lowest_total_paise | inr }}
+                        </div>
+                    </div>
+                    {% if analysis.max_savings_paise and analysis.max_savings_paise > 0 %}
+                        <div style="padding-left: 20px; border-left: 2px solid var(--border);">
+                            <span style="font-size: 0.8rem; color: var(--muted); display: block;">Max Savings:</span>
+                            <div style="font-size: 1.3rem; font-weight: 700; color: var(--primary); line-height: 1;">
+                                {{ analysis.max_savings_paise | inr }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-sm);">
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border); color: var(--muted); font-size: 0.85rem; text-transform: uppercase;">
+                                <th style="padding: 12px 16px;">Store Retailer</th>
+                                <th style="padding: 12px 16px;">Listed Price</th>
+                                <th style="padding: 12px 16px;">Delivery Fee</th>
+                                <th style="padding: 12px 16px;">Effective Total</th>
+                                <th style="padding: 12px 16px;">Stock Status</th>
+                                <th style="padding: 12px 16px; text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for offer in offers %}
+                                {% set is_lowest = offer.id in analysis.lowest_ids %}
+                                <tr style="border-bottom: 1px solid var(--border); background-color: {% if is_lowest %}#f0fdf4{% else %}transparent{% endif %};">
+                                    <td style="padding: 16px;">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <span style="width: 12px; height: 12px; border-radius: 50%; background: {{ offer.logo_color }};"></span>
+                                            <strong>{{ offer.store_name }}</strong>
+                                            {% if is_lowest %}
+                                                <span style="background: #22c55e; color: #ffffff; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; margin-left: 6px;">
+                                                    LOWEST PRICE
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td style="padding: 16px; font-weight: 600;">
+                                        {{ offer.price_paise | inr }}
+                                    </td>
+                                    <td style="padding: 16px; color: var(--muted);">
+                                        {% if offer.delivery_charge_paise == 0 %}
+                                            <span style="color: var(--accent); font-weight: 600;">FREE</span>
+                                        {% else %}
+                                            + {{ offer.delivery_charge_paise | inr }}
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 16px; font-weight: 800; font-size: 1.15rem; color: {% if is_lowest %}var(--accent){% else %}var(--dark){% endif %};">
+                                        {{ offer.total_paise | inr }}
+                                    </td>
+                                    <td style="padding: 16px;">
+                                        {% if offer.is_in_stock %}
+                                            <span style="color: var(--accent); font-weight: 500;">&#10003; In Stock</span>
+                                        {% else %}
+                                            <span style="color: var(--danger);">Out of Stock</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 16px; text-align: right;">
+                                        <a href="{{ url_for('view_deal', offer_id=offer.id) }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 8px 18px; font-size: 0.88rem;">
+                                            View Deal &nearr;
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

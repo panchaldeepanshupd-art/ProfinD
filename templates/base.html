@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ProfinD — Smart Price Comparison & Analysis{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="{{ url_for('home') }}" class="brand-logo">
+                <span class="logo-accent">Pro</span>fin<span class="logo-accent">D</span>
+            </a>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+
+            <nav class="nav-menu" id="navMenu">
+                <ul class="nav-list">
+                    <li><a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">Home</a></li>
+                    <li><a href="{{ url_for('products') }}" class="nav-link {% if request.endpoint == 'products' %}active{% endif %}">Products</a></li>
+                    <li><a href="{{ url_for('compare') }}" class="nav-link {% if request.endpoint == 'compare' %}active{% endif %}">Compare Prices</a></li>
+                    <li><a href="{{ url_for('about') }}" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+                    <li><a href="{{ url_for('contact') }}" class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="{{ url_for('admin_login') }}" class="btn-admin-nav">Admin Portal</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Flash Messages Container -->
+    <div class="container flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Dynamic Content Block -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-container">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <span class="logo-accent">Pro</span>fin<span class="logo-accent">D</span>
+                </div>
+                <p class="footer-desc">
+                    A Smart E-Commerce Product Price Comparison and Analysis System developed as an MCA Final-Semester AI/ML Project.
+                </p>
+                <div class="footer-badge">Academic Project Demonstration</div>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-title">Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('products') }}">All Products</a></li>
+                    <li><a href="{{ url_for('compare') }}">Price Comparison</a></li>
+                    <li><a href="{{ url_for('about') }}">About Project</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact &amp; Feedback</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-title">Core Principles</h4>
+                <ul class="footer-links">
+                    <li><span>&#10003; Accurate Total Cost (Price + Delivery)</span></li>
+                    <li><span>&#10003; O(n) Linear Scan Minimum Algorithm</span></li>
+                    <li><span>&#10003; Transparent Store Attribution</span></li>
+                    <li><span>&#10003; Secure Parameterized SQL Queries</span></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-title">System Specs</h4>
+                <p class="tech-stack-tag">Python 3.14 &bull; Flask 3.1 &bull; SQLite3 &bull; HTML5/CSS3</p>
+                <p class="footer-note">All sample prices and stores are demonstrative academic data.</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container footer-bottom-container">
+                <p>&copy; 2026 ProfinD Project. Developed for MCA Practical Exam &amp; Viva Voce.</p>
+                <p><a href="{{ url_for('admin_login') }}">Admin Login</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} — Price Comparison | ProfinD{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: 30px;">
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <nav style="margin-bottom: 24px; font-size: 0.88rem; color: var(--muted);">
+            <a href="{{ url_for('home') }}">Home</a> &gt; 
+            <a href="{{ url_for('products') }}">Products</a> &gt; 
+            <a href="{{ url_for('products', category=product.category) }}">{{ product.category }}</a> &gt; 
+            <span style="color: var(--dark); font-weight: 500;">{{ product.name }}</span>
+        </nav>
+
+        <!-- Product Overview Header Card -->
+        <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 16px; padding: 32px; display: grid; grid-template-columns: 340px 1fr; gap: 40px; margin-bottom: 30px; box-shadow: var(--shadow-sm);">
+            <!-- Image Area -->
+            <div style="background: var(--light-bg); border-radius: 12px; display: flex; align-items: center; justify-content: center; height: 320px; padding: 20px; border: 1px solid var(--border);">
+                {% if product.image_url %}
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                {% else %}
+                    <div class="placeholder-art">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 80px; height: 80px; color: #94a3b8;">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="2" y1="20" x2="22" y2="20"></line>
+                        </svg>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Details Area -->
+            <div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                    <span class="product-badge" style="position: static; display: inline-block;">{{ product.category }}</span>
+                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase;">{{ product.brand }}</span>
+                    <span style="font-size: 0.78rem; color: var(--muted); background: var(--alt-bg); padding: 2px 8px; border-radius: 4px;">ID #{{ product.id }}</span>
+                </div>
+                
+                <h1 style="font-size: 1.8rem; margin: 4px 0 14px 0;">{{ product.name }}</h1>
+                <p style="color: var(--slate); font-size: 0.98rem; line-height: 1.6; margin-bottom: 20px;">{{ product.description }}</p>
+
+                {% if specs_list and specs_list|length > 0 %}
+                    <div style="background: var(--light-bg); border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; border: 1px solid var(--border);">
+                        <strong style="display: block; font-size: 0.82rem; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px;">Key Specifications:</strong>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px;">
+                            {% for spec in specs_list %}
+                                <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; font-size: 0.85rem;">
+                                    <span style="color: var(--muted); font-weight: 600; display: block; font-size: 0.75rem; text-transform: uppercase;">{{ spec.label }}</span>
+                                    <span style="color: var(--dark); font-weight: 500;">{{ spec.value }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% elif product.specifications %}
+                    <div style="background: var(--light-bg); border-radius: 8px; padding: 14px 18px; margin-bottom: 24px; border: 1px solid var(--border);">
+                        <strong style="display: block; font-size: 0.82rem; color: var(--muted); text-transform: uppercase; margin-bottom: 6px;">Technical Specifications:</strong>
+                        <div style="font-size: 0.9rem; color: var(--dark);">{{ product.specifications }}</div>
+                    </div>
+                {% endif %}
+
+                <!-- DAA Quick Metrics Row -->
+                <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
+                    <div>
+                        <span style="font-size: 0.8rem; color: var(--muted); display: block;">Lowest Total Price:</span>
+                        <div style="font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1.1;">
+                            {{ analysis.lowest_total_paise | inr }}
+                        </div>
+                    </div>
+
+                    {% if analysis.max_savings_paise and analysis.max_savings_paise > 0 %}
+                        <div style="padding-left: 20px; border-left: 2px solid var(--border);">
+                            <span style="font-size: 0.8rem; color: var(--muted); display: block;">Potential Savings:</span>
+                            <div style="font-size: 1.4rem; font-weight: 700; color: var(--primary); line-height: 1.2;">
+                                Up to {{ analysis.max_savings_paise | inr }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div style="margin-left: auto;">
+                        <span style="background: var(--accent-light); color: var(--accent); border: 1px solid #a7f3d0; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem;">
+                            &#10003; {{ analysis.valid_offers_count }} Verified Store Offers
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAA Algorithmic Analysis Callout Box (Academic/Viva Showcase) -->
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 20px 24px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 42px; height: 42px; background: #dbeafe; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px;">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <div>
+                    <h4 style="font-size: 1rem; margin-bottom: 2px; color: var(--dark);">
+                        DAA Algorithmic Guarantee: Optimal Linear Scan &bull; Time Complexity: <code style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">O(n)</code>
+                    </h4>
+                    <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">
+                        Evaluated {{ analysis.valid_offers_count }} offers in a single scan with {{ analysis.comparisons_count }} comparison operations. Auxiliary Space: <code style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">O(1)</code>.
+                    </p>
+                </div>
+            </div>
+            <div>
+                <span style="font-size: 0.75rem; font-weight: 600; background: #e0f2fe; color: #0369a1; padding: 6px 12px; border-radius: 6px; border: 1px solid #bae6fd;">
+                    Asymptotically Optimal (Superior to O(n log n) sorting)
+                </span>
+            </div>
+        </div>
+
+        <!-- Price History & Trend Analysis Section (Phase 9) -->
+        <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 30px; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <h2 style="font-size: 1.4rem; margin-bottom: 4px;">Price History &amp; Trend Analysis</h2>
+                    <p style="color: var(--muted); font-size: 0.88rem;">30-day historical price observations tracked for market fluctuation</p>
+                </div>
+                <div>
+                    {% if history.has_history %}
+                        {% if history.trend_status == 'DROPPED' %}
+                            <span style="background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700;">
+                                &#9660; {{ history.percent_change }}% Price Drop (Great Value)
+                            </span>
+                        {% elif history.trend_status == 'INCREASED' %}
+                            <span style="background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700;">
+                                &#9650; +{{ history.percent_change }}% Price Increase
+                            </span>
+                        {% else %}
+                            <span style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700;">
+                                &bull; Price Stable
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if history.has_history %}
+                <p style="font-size: 0.92rem; color: var(--slate); margin-bottom: 20px; background: var(--light-bg); padding: 10px 16px; border-radius: 8px; border-left: 4px solid var(--primary);">
+                    <strong>Trend Insight:</strong> {{ history.trend_description }}
+                </p>
+
+                <!-- History Observations Table -->
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border); color: var(--muted); font-size: 0.8rem; text-transform: uppercase;">
+                                <th style="padding: 10px 14px;">Recorded Date</th>
+                                <th style="padding: 10px 14px;">Retail Store</th>
+                                <th style="padding: 10px 14px;">Recorded Base Price</th>
+                                <th style="padding: 10px 14px;">Effective Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in history.timeline %}
+                                <tr style="border-bottom: 1px solid var(--border);">
+                                    <td style="padding: 10px 14px; color: var(--slate);">
+                                        {{ record.recorded_at.split(' ')[0] }}
+                                    </td>
+                                    <td style="padding: 10px 14px; font-weight: 600;">
+                                        {{ record.store_name }}
+                                    </td>
+                                    <td style="padding: 10px 14px;">
+                                        {{ record.price_paise | inr }}
+                                    </td>
+                                    <td style="padding: 10px 14px; font-weight: 700; color: var(--primary);">
+                                        {{ record.total_paise | inr }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p style="color: var(--muted); text-align: center; padding: 20px;">
+                    Historical price observations are collected over time as verified prices are recorded.
+                </p>
+            {% endif %}
+        </div>
+
+        <!-- Offers Comparison Table -->
+        <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-sm);">
+            <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <h2 style="font-size: 1.5rem; margin-bottom: 4px;">Verified Store Offers Comparison</h2>
+                    <p style="color: var(--muted); font-size: 0.9rem;">
+                        Comparable Total = Base Store Price + Delivery Fee
+                    </p>
+                </div>
+                <div>
+                    <span style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                        &#9432; Academic Demo Dataset (INR)
+                    </span>
+                </div>
+            </div>
+
+            {% if offers and offers|length > 0 %}
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border); color: var(--muted); font-size: 0.85rem; text-transform: uppercase;">
+                                <th style="padding: 12px 16px;">Store Retailer</th>
+                                <th style="padding: 12px 16px;">Base Price</th>
+                                <th style="padding: 12px 16px;">Delivery Charge</th>
+                                <th style="padding: 12px 16px;">Final Payable Total</th>
+                                <th style="padding: 12px 16px;">Availability</th>
+                                <th style="padding: 12px 16px;">Last Verified</th>
+                                <th style="padding: 12px 16px; text-align: right;">Store Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for offer in offers %}
+                                {% set is_lowest = offer.id in analysis.lowest_ids %}
+                                <tr style="border-bottom: 1px solid var(--border); background-color: {% if is_lowest %}#f0fdf4{% else %}transparent{% endif %};">
+                                    <td style="padding: 16px;">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <span style="width: 12px; height: 12px; border-radius: 50%; background: {{ offer.logo_color }};"></span>
+                                            <strong>{{ offer.store_name }}</strong>
+                                            {% if is_lowest %}
+                                                <span style="background: #22c55e; color: #ffffff; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; margin-left: 6px; letter-spacing: 0.3px;">
+                                                    &#10003; LOWEST PRICE
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td style="padding: 16px; font-weight: 600;">
+                                        {{ offer.price_paise | inr }}
+                                    </td>
+                                    <td style="padding: 16px; color: var(--muted);">
+                                        {% if offer.delivery_charge_paise == 0 %}
+                                            <span style="color: var(--accent); font-weight: 600;">FREE</span>
+                                        {% else %}
+                                            + {{ offer.delivery_charge_paise | inr }}
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 16px; font-weight: 800; font-size: 1.15rem; color: {% if is_lowest %}var(--accent){% else %}var(--dark){% endif %};">
+                                        {{ offer.total_paise | inr }}
+                                    </td>
+                                    <td style="padding: 16px;">
+                                        {% if offer.is_in_stock %}
+                                            <span style="color: var(--accent); font-weight: 500;">&#10003; In Stock</span>
+                                        {% else %}
+                                            <span style="color: var(--danger);">Out of Stock</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 16px; font-size: 0.85rem; color: var(--muted);">
+                                        {{ offer.last_updated.split(' ')[0] if offer.last_updated else 'Today' }}
+                                    </td>
+                                    <td style="padding: 16px; text-align: right;">
+                                        <a href="{{ url_for('view_deal', offer_id=offer.id) }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 8px 18px; font-size: 0.88rem;">
+                                            View Deal &nearr;
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p style="color: var(--muted); text-align: center; padding: 30px;">
+                    No store offers are currently recorded for this product.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

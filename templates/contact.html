@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact &amp; Viva Information — ProfinD{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container" style="max-width: 720px;">
+        <div class="section-header">
+            <h1 class="section-title">Contact &amp; Project Info</h1>
+            <p class="section-subtitle">MCA Final-Semester Project Demonstration Support</p>
+        </div>
+
+        <div style="background: #ffffff; padding: 36px; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+            <h3 style="margin-bottom: 12px;">Candidate Demonstration Inquiries</h3>
+            <p style="margin-bottom: 20px; color: var(--muted);">
+                For evaluation, viva questions, or examiner review concerning the ProfinD codebase and algorithm implementation:
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px;">
+                <div style="padding: 12px 16px; background: var(--light-bg); border-radius: 8px;">
+                    <strong>Program:</strong> Master of Computer Applications (MCA) — AI/ML Final Semester
+                </div>
+                <div style="padding: 12px 16px; background: var(--light-bg); border-radius: 8px;">
+                    <strong>Project Title:</strong> ProfinD (Smart E-Commerce Product Price Comparison &amp; Analysis System)
+                </div>
+                <div style="padding: 12px 16px; background: var(--light-bg); border-radius: 8px;">
+                    <strong>Technology Stack:</strong> Python 3.14, Flask, SQLite3, HTML5, CSS3, JavaScript
+                </div>
+            </div>
+
+            <p style="font-size: 0.9rem; color: var(--muted);">
+                Note: In Phase 9, an authenticated Administrative Portal will allow managing products, verified retail stores, and offer URLs.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

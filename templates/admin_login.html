@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Sign In — ProfinD Portal{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: 50px;">
+    <div class="container" style="max-width: 440px;">
+        <div style="background: #ffffff; padding: 36px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-md);">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <span class="badge" style="background: #e0e7ff; color: #4338ca; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                    Protected Portal
+                </span>
+                <h1 style="font-size: 1.6rem; margin: 10px 0 4px 0;">Administrator Login</h1>
+                <p style="font-size: 0.88rem; color: var(--muted); margin: 0;">Authorized access to manage catalog, stores &amp; offers</p>
+            </div>
+
+            <!-- Examiner Credentials Box for Viva/Practical Evaluation -->
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 14px; margin-bottom: 20px; font-size: 0.85rem; color: #166534;">
+                <div style="font-weight: 700; margin-bottom: 4px;">&#128273; Viva / Evaluation Credentials:</div>
+                <div>Username: <code>admin</code></div>
+                <div>Password: <code>Admin@ProfinD2026</code></div>
+            </div>
+
+            <form action="{{ url_for('admin_login') }}" method="POST">
+                <div style="margin-bottom: 16px;">
+                    <label for="username" style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: var(--dark);">
+                        Admin Username
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        value="{{ username or '' }}"
+                        class="search-input" 
+                        style="width: 100%; border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; background: var(--light-bg);" 
+                        placeholder="admin" 
+                        required 
+                        autocomplete="username"
+                    >
+                </div>
+
+                <div style="margin-bottom: 24px;">
+                    <label for="password" style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: var(--dark);">
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="search-input" 
+                        style="width: 100%; border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; background: var(--light-bg);" 
+                        placeholder="••••••••••••" 
+                        required 
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" style="padding: 12px;">
+                    Authenticate &amp; Access Dashboard &rarr;
+                </button>
+            </form>
+
+            <p style="margin-top: 24px; text-align: center; font-size: 0.82rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 16px;">
+                Password storage utilizes <code>scrypt</code> one-way cryptographic hashing. Non-admin users are strictly denied write access.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

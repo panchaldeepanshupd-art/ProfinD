@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %}ProfinD — Find the Best Price, Shop Smarter{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container hero-container">
+        <div class="hero-badge">
+            <span class="badge-dot"></span> Smart E-Commerce Price Intelligence
+        </div>
+        <h1 class="hero-title">
+            Find the Best Price,<br><span class="highlight-text">Shop Smarter.</span>
+        </h1>
+        <p class="hero-subtitle">
+            Compare genuine product prices across leading online stores in real time. We factor in base price and delivery charges to ensure you always find the true lowest cost.
+        </p>
+
+        <!-- Search Bar Form -->
+        <div class="hero-search-wrapper">
+            <form action="{{ url_for('products') }}" method="GET" class="search-form" id="searchForm">
+                <div class="search-input-group">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input 
+                        type="text" 
+                        name="q" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Search for smartphones, laptops, headphones, smartwatches..." 
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="submit" class="btn btn-primary search-btn">
+                        Search Prices
+                    </button>
+                </div>
+            </form>
+
+            <!-- Popular Search Suggestions -->
+            <div class="popular-tags">
+                <span class="tags-label">Popular Searches:</span>
+                <a href="{{ url_for('products', q='iPhone 15') }}" class="tag-pill">iPhone 15</a>
+                <a href="{{ url_for('products', q='MacBook Air') }}" class="tag-pill">MacBook Air M2</a>
+                <a href="{{ url_for('products', q='Sony WH-1000XM5') }}" class="tag-pill">Sony WH-1000XM5</a>
+                <a href="{{ url_for('products', q='Galaxy S24') }}" class="tag-pill">Samsung Galaxy S24</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section section-how">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">How ProfinD Works</h2>
+            <p class="section-subtitle">Three simple steps to save money on every electronic purchase</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <div class="step-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="step-icon">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <h3 class="step-title">1. Search Products</h3>
+                <p class="step-desc">
+                    Type a product name, brand, or model keyword to instantly retrieve verified catalog entries from our database.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <div class="step-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="step-icon">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </div>
+                <h3 class="step-title">2. Compare Offers</h3>
+                <p class="step-desc">
+                    View offers side-by-side from Amazon, Flipkart, Croma, and Reliance Digital. Our linear scan algorithm calculates the true minimum total cost.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <div class="step-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="step-icon">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </div>
+                <h3 class="step-title">3. View Direct Deal</h3>
+                <p class="step-desc">
+                    Click "View Deal" to visit the retailer directly with authentic pricing information and save money without hidden fees.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Sample Products Section -->
+<section class="section section-featured">
+    <div class="container">
+        <div class="section-header-flex">
+            <div>
+                <h2 class="section-title">Featured Products</h2>
+                <p class="section-subtitle">Popular electronics currently indexed in ProfinD</p>
+            </div>
+            <a href="{{ url_for('products') }}" class="btn btn-outline">View All Products &rarr;</a>
+        </div>
+
+        <div class="products-grid">
+            {% if featured_products %}
+                {% for p in featured_products %}
+                    <div class="product-card">
+                        <div class="product-badge">{{ p.category }}</div>
+                        <div class="product-image-container">
+                            {% if p.image_url %}
+                                <img src="{{ p.image_url }}" alt="{{ p.name }}" style="width: 100%; height: 100%; object-fit: contain; padding: 12px;" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'placeholder-art\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.5\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'14\' rx=\'2\' ry=\'2\'></rect><line x1=\'2\' y1=\'20\' x2=\'22\' y2=\'20\'></line></svg></div>';">
+                            {% else %}
+                                <div class="placeholder-art">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                        <line x1="2" y1="20" x2="22" y2="20"></line>
+                                    </svg>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">{{ p.brand }}</span>
+                            <h3 class="product-title" title="{{ p.name }}">{{ p.name }}</h3>
+                            <p class="product-spec-preview">{{ p.specifications or p.description }}</p>
+                            <div class="product-pricing">
+                                <span class="price-label">Offers from</span>
+                                <div class="price-value">{{ p.min_total_paise | inr }}</div>
+                                <span class="store-count">Available in {{ p.offer_count }} stores</span>
+                            </div>
+                            <div class="product-actions">
+                                <a href="{{ url_for('product_details', product_id=p.id) }}" class="btn btn-primary btn-block">Compare Prices</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Academic & Algorithmic Highlights Section -->
+<section class="section section-features bg-alt">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Designed for Accuracy and Transparency</h2>
+            <p class="section-subtitle">Core engineering highlights for the MCA AI/ML curriculum</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-bullet">&#9670;</div>
+                <div>
+                    <h4>True Total Cost Detection</h4>
+                    <p>Unlike basic aggregators that display only base prices, ProfinD adds delivery charges so the user gets the true final bill.</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-bullet">&#9670;</div>
+                <div>
+                    <h4>O(n) DAA Minimum Scan</h4>
+                    <p>Implements optimal linear scan comparison with O(1) auxiliary space to pinpoint the minimum comparable offer without redundant sorting.</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-bullet">&#9670;</div>
+                <div>
+                    <h4>Exact Integer Currency</h4>
+                    <p>Avoids floating-point rounding errors by storing money as integer paise in the SQLite database.</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-bullet">&#9670;</div>
+                <div>
+                    <h4>Prepared SQL Protection</h4>
+                    <p>All database operations employ parameterized queries to guarantee immunity against SQL injection vulnerabilities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

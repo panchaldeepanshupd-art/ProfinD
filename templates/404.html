@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}404 — Page Not Found | ProfinD{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: 60px; text-align: center;">
+    <div class="container" style="max-width: 620px;">
+        <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 16px; padding: 50px 30px; box-shadow: var(--shadow-sm);">
+            <div style="font-size: 4rem; font-weight: 800; color: var(--primary); line-height: 1; margin-bottom: 12px;">404</div>
+            <h1 style="font-size: 1.6rem; margin-bottom: 12px;">Page Not Found</h1>
+            <p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 28px; line-height: 1.6;">
+                The requested URL does not exist or has been moved. You can return to the homepage or search for products across verified stores.
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="{{ url_for('home') }}" class="btn btn-primary">Return to Homepage</a>
+                <a href="{{ url_for('products') }}" class="btn btn-outline">Browse Products</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

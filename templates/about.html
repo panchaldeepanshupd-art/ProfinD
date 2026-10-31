@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}About ProfinD — Academic Project{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container" style="max-width: 860px;">
+        <div class="section-header">
+            <h1 class="section-title">About ProfinD</h1>
+            <p class="section-subtitle">Smart E-Commerce Product Price Comparison &amp; Analysis System</p>
+        </div>
+
+        <div style="background: #ffffff; padding: 36px; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); margin-bottom: 24px;">
+            <h3 style="margin-bottom: 12px; color: var(--primary);">Project Overview</h3>
+            <p style="margin-bottom: 16px; color: var(--slate);">
+                <strong>ProfinD</strong> is developed as an MCA Final-Semester Capstone Project. The platform addresses a common consumer challenge: prices for identical electronic items fluctuate wildly across online retailers (Amazon, Flipkart, Croma, Reliance Digital), and misleading promotional prices often hide mandatory delivery fees.
+            </p>
+            <p style="margin-bottom: 20px; color: var(--slate);">
+                ProfinD aggregates store offerings, calculates the <strong>effective total cost (Base Price + Shipping)</strong>, and leverages an optimal <strong>\(O(n)\) linear scan algorithm</strong> to mathematically guarantee identification of the lowest price offer.
+            </p>
+
+            <h3 style="margin-bottom: 12px; color: var(--primary);">Curriculum Competencies Demonstrated</h3>
+            <ul style="padding-left: 20px; color: var(--slate); line-height: 1.8;">
+                <li><strong>Design &amp; Analysis of Algorithms (DAA):</strong> Optimal linear minimum scan algorithm with \(O(n)\) time and \(O(1)\) auxiliary space complexity.</li>
+                <li><strong>Advanced Database Management Systems (ADBMS):</strong> Relational schema normalization (3NF), foreign key referential integrity, exact integer currency representation (paise), and parameterized SQL statements.</li>
+                <li><strong>Advanced Internet Programming (AIP):</strong> Clean WSGI application architecture using Python Flask, Jinja2 template inheritance, and accessible responsive CSS3.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %}
